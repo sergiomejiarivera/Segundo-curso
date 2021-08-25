@@ -1,48 +1,67 @@
-﻿@model ENTIDAD.Proyecto
+﻿@model ENTIDAD.EmpleadoCE
 
 @{
     ViewBag.Title = "Editar";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<form id="frmProyecto" action="@Url.Action("Editar", "Proyecto")" method="post">
+<form id="frmEmpleado" action="@Url.Action("Editar", "Empleado")" method="post">
 
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>Editar Proyecto</h4>
+        <h4>Editar Empleado</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.ProyectoId)
+        @Html.HiddenFor(model => model.EmpleadoId)
 
         <div class="form-group">
-            <label class="control-label col-md-2">Nombre del Proyecto</label>
+            <label class="control-label col-md-2">Nombres</label>
             <div class="col-md-10">
-                <input type="text" class="form-control" name="NombreProyecto" id="NombreProyecto"
-                       value="@Model.NombreProyecto" placeholder="Nombre del Proyecto" />
-                @Html.ValidationMessageFor(model => model.NombreProyecto, "", new { @class = "text-danger" })
+                <input type="text" class="form-control" name="Nombres"
+                       value="@Model.Nombres" placeholder="Ingrese Nombres del Empleado" />
             </div>
         </div>
-
         <div class="form-group">
-            <label class="control-label col-md-2">Fecha de Inicio</label>
+            <label class="control-label col-md-2">Apellidos</label>
             <div class="col-md-10">
-                <input type="date" class="form-control" id="FechaInicio" name="FechaInicio" value="@Model.FechaInicio.ToString("yyyy-MM-dd")" />
-                @Html.ValidationMessageFor(model => model.FechaInicio, "", new { @class = "text-danger" })
+                <input type="text" class="form-control" name="Apellidos"
+                       value="@Model.Apellidos" placeholder="Ingrese Apellidos del Empleado" />
             </div>
         </div>
-
         <div class="form-group">
-            <label class="control-label col-md-2">Fecha Fin</label>
+            <label class="control-label col-md-2">Email</label>
             <div class="col-md-10">
-                <input type="date" class="form-control" id="FechaFin" name="FechaFin" value="@Model.FechaFin.ToString("yyyy-MM-dd")" />
-                @Html.ValidationMessageFor(model => model.FechaFin, "", new { @class = "text-danger" })
+                <input type="text" class="form-control" name="Email"
+                       value="@Model.Email" placeholder="Ingrese Email" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Direccion</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" name="Direccion" 
+                       value="@Model.Direccion" placeholder="Ingrese Direccion" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Celular</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" name="Celular"
+                       value="@Model.Celular" placeholder="Ingrese Celular" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Departamentos</label>
+            <div class="col-md-10">
+                <select class="form-control" id="DepartamentoId" name="DepartamentoId">
+                    <option value="">Seleccione...</option>
+                </select>
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Guardar Proyecto" class="btn btn-primary" />
+                <input type="submit" value="Guardar Empleado" class="btn btn-primary" />
             </div>
         </div>
     </div>
@@ -53,45 +72,36 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    <script>
-        $("#frmProyecto").submit(function (event) {
+<script>
+        getDepartamento(function (result) {
+            $("#DepartamentoId").val("@Model.DepartamentoId");
+        });
+
+
+        $("#frmEmpleado").submit(function (event) {
             event.preventDefault();  //prevent defaul action
 
-            var nombre = $("#NombreProyecto").val();
-            var fechainicio = $("#FechaInicio").val();
-            var fechafin = $("#FechaFin").val();
-
-            if ($.trim(nombre) == "") {
-                alert("Debe ingresar el Nombre del Proyecto!!!");
+            var dptoId = $("#DepartamentoId").val();
+            if (dptoId == "") {
+                alert("Debe escoger un departamento!!!");
                 return;
             }
-
-            if (fechainicio == "" || fechafin == "") {
-                alert("Debe ingresar la Fecha de Inicio y la Fecha Fin!!!");
-                return;
-            }
-
-            if (ValidarFechas(fechainicio, fechafin) == false) {
-                alert("La Fecha Fin no puede ser menor que la Fecha Inicio!!!");
-                return;
-            }
-
 
             var post_url = $(this).attr("action");  //get form action url
             var request_method = $(this).attr("method");  //get form GET/POST method
             var form_data = $(this).serializeArray();  //Encode form elements for submission
             console.log(form_data);
 
-            LoadingOverlayShow("#frmProyecto");
+            LoadingOverlayShow("#frmEmpleado");
             $.ajax({
                 url: post_url,
                 type: request_method,
                 data: form_data
             }).done(function (response) {  //
                 console.log(response);
-                LoadingOverlayHide("#frmProyecto");
+                LoadingOverlayHide("#frmEmpleado");
                 if (response.ok) {
-                    alert("Proyecto Editado Correctamente.");
+                    alert("Empleado Editado Correctamente.");
                     window.location = response.toRedirect;
                 }
                 else {
@@ -99,11 +109,11 @@
                 }
 
             }).fail(function (jqXHR, textStatus, errorThrown) {
-                LoadingOverlayHide("#frmProyecto");
+                LoadingOverlayHide("#frmEmpleado");
                 alert(textStatus);
             });
         });
-    </script>
+</script>
 
 
 }

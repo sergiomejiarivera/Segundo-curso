@@ -1,4 +1,4 @@
-﻿@model ENTIDAD.Proyecto
+﻿@model ENTIDAD.EmpleadoCE
 
 @{
     ViewBag.Title = "Detalles";
@@ -7,36 +7,52 @@
 
 
 <div>
-    <h4>Detalles del Proyecto</h4>
+    <h4>Detalles del Empleado</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            Nombre del Proyecto:
+            Apellidos y Nombres:
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.NombreProyecto)
+            @Model.NombreCompleto
         </dd>
 
         <dt>
-           Fecha de Inicio:
+            Email:
         </dt>
 
         <dd>
-            @Model.FechaInicio.ToShortDateString()
+            @Model.Email
         </dd>
 
         <dt>
-            Fecha Fin:
+            Direccion:
         </dt>
 
         <dd>
-            @Model.FechaFin.ToShortDateString()
+            @Model.Direccion
+        </dd>
+
+        <dt>
+            Celular:
+        </dt>
+
+        <dd>
+            @Model.Celular
+        </dd>
+
+        <dt>
+            Departamento:
+        </dt>
+
+        <dd>
+            @Model.NombreDepartamento
         </dd>
 
     </dl>
 </div>
 <p>
-    <a class="btn btn-primary" href="@Url.Action("Editar", "Proyecto", new { id = Model.ProyectoId })">Editar</a>
-    <a class="btn btn-default" href="@Url.Action("Index", "Proyecto")">Regresar</a>  
+    <a class="btn btn-primary" href="@Url.Action("Editar", "Empleado", new { id = Model.EmpleadoId })">Editar</a>
+    <a class="btn btn-default" href="@Url.Action("Index", "Empleado")">Regresar</a>  
 </p>

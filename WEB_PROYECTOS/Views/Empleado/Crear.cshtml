@@ -67,23 +67,8 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
-        getData();
-        function getData() {
-            $.ajax({
-                type: "GET",
-                url: '/departamento/getdepartamentos',
-                dataType: 'json',
-                success: function (result) {
-                    $.each(result.data, function (key, item) {
-                        $("#DepartamentoId").append('<option value =' + item.DepartamentoId + '>' + item.NombreDepartamento + '</option>');
-                    });
-                },
-                error: function (data) {
-                    alert('error');
-                }
-            });
-        }
-
+        getDepartamento();
+        
         $("#frmEmpleado").submit(function (event) {
             event.preventDefault();  //prevent defaul action
 

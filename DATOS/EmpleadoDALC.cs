@@ -1,6 +1,7 @@
 ﻿using ENTIDAD;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,33 +18,47 @@ namespace DATOS
                 db.SaveChanges();
             }
         }
-        public List<Empleado> ListarEmpleados()
+        public List<EmpleadoCE> ListarEmpleados()
         {
+            string sql = @"select  e.EmpleadoId, e.Nombres, e.Apellidos, e.Email, e.Direccion, e.Celular,
+                            e.DepartamentoId, d.NombreDepartamento
+                            from Empleado e
+                            inner join Departamento d on e.DepartamentoId = d.DepartamentoId";
             using (var db = new ProyectosContext())
             {
-                return db.Empleado.ToList();
+                return db.Database.SqlQuery<EmpleadoCE>(sql).ToList();
             }
         }
 
-        public Empleado ObtenerEmpleado(int id)
+        public EmpleadoCE ObtenerEmpleado(int id)
         {
+            string sql = @"select  e.EmpleadoId, e.Nombres, e.Apellidos, e.Email, e.Direccion, e.Celular,
+                            e.DepartamentoId, d.NombreDepartamento
+                            from Empleado e
+                            inner join Departamento d on e.DepartamentoId = d.DepartamentoId
+                            where e.EmpleadoId = @EmpleadoId";
             using (var db = new ProyectosContext())
             {
-                return db.Empleado.Find(id);
+                //return db.Empleado.Find(id);
+                return db.Database.SqlQuery<EmpleadoCE>(sql,
+                    new SqlParameter("@EmpleadoId", id)).FirstOrDefault();
             }
         }
 
         public void Editar(Empleado empleado)
         {
-            //using (var db = new ProyectosContext())
-            //{
-            //    var origen = db.Empleado.Find(empleado.ProyectoId);
-            //    origen.NombreProyecto = empleado.NombreProyecto;
-            //    origen.FechaInicio = empleado.FechaInicio;
-            //    origen.FechaFin = empleado.FechaFin;
-            //    db.SaveChanges();
+            using (var db = new ProyectosContext())
+            {
+                var origen = db.Empleado.Find(empleado.EmpleadoId);
+                origen.Nombres = empleado.Nombres;
+                origen.Apellidos = empleado.Apellidos;
+                origen.Email = empleado.Email;
+                origen.Direccion = empleado.Direccion;
+                origen.Celular = empleado.Celular;
+                origen.DepartamentoId = empleado.DepartamentoId; 
+                db.SaveChanges();
 
-            //}
+            }
         }
 
         public void Eliminar(int id)
