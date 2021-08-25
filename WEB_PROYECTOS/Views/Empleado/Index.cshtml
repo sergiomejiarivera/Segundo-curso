@@ -1,0 +1,119 @@
+﻿@model IEnumerable<ENTIDAD.Empleado>
+
+@{
+    ViewBag.Title = "Listado de Empleados";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Lista de Empleados</h2>
+
+<p>
+    <a class="btn btn-primary" href="@Url.Action("Crear", "Empleado")"> <i class="glyphicon glyphicon-plus-sign"></i> Crear Nuevo</a>
+</p>
+<table class="table" id="tableDemo">
+    <thead>
+        <tr>
+            <th>
+                Nombres
+            </th>
+            <th>
+                Apellidos
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Dirección
+            </th>
+            <th>
+                Celular
+            </th>
+            <th>
+                Departamento
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Nombres
+                </td>
+                <td>
+                    @item.Apellidos
+                </td>
+                <td>
+                    @item.Email
+                </td>
+                <td>
+                    @item.Dirección
+                </td>
+                <td>
+                    @item.Celular
+                </td>
+                <td>
+                    @item.DepartamentoId
+                </td>
+                <td>
+                    <a class="btn btn-primary btn-xs" title="Editar" href="@Url.Action("Editar", "Empleado", new { id = item.EmpleadoId })">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                    <a class="btn btn-info btn-xs" title="Detalles" href="@Url.Action("Detalles", "Empleado", new { id = item.EmpleadoId })">
+                        <i class="glyphicon glyphicon-th-list"></i>
+                    </a>
+                    <a class="btn btn-danger btn-xs" onclick="EliminarEmpleado(@item.EmpleadoId)" title="Eliminar">
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </a>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@section scripts{
+    <script>
+        $('#tableDemo').DataTable({
+            "pageLength": 5,
+            lengthMenu: [5, 10, 20, 50, 100, 200, 500],
+        });
+
+        function EliminarEmpleado(id) {
+            $.confirm({
+                title: 'Eliminar Empleado!',
+                content: '¿Esta seguro de Eliminar este Empleado?',
+                buttons: {
+                    Aceptar: function () {
+                        LoadingOverlayShow("#tableDemo");
+                        $.ajax({
+                            url: "/empleado/eliminar",
+                            type: "post",
+                            data: { identificador: id }
+                        }).done(function (response) {  //
+                            console.log(response);
+                            LoadingOverlayHide("#tableDemo");
+                            if (response.ok) {
+                                alert("Empleado Eliminado Correctamente.");
+                                window.location = response.toRedirect;
+                            }
+                            else {
+                                alert(response.msg);
+                            }
+
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                            LoadingOverlayHide("#tableDemo");
+                            alert(textStatus);
+                        });
+                    },
+                    Cancelar: function () {
+                        /*$.alert('Empleado Cancelado !');*/
+                    },
+                }
+            });
+        }
+    </script>
+}
