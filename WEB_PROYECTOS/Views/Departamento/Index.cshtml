@@ -1,0 +1,54 @@
+﻿@model IEnumerable<ENTIDAD.Departamento>
+
+@{
+    ViewBag.Title = "Listado de Departamentos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Departamentos</h2>
+
+<p>
+    <a class="btn btn-primary" href="@Url.Action("Crear", "Departamento")"> <i class="glyphicon glyphicon-plus-sign"></i> Crear Nuevo Departamento</a>
+</p>
+<table class="table" id="tablaDepartamentos">
+    <thead>
+        <tr>
+            <th>
+                Nombre de Departamento
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.NombreDepartamento
+                </td>
+                <td>
+                    <a class="btn btn-primary btn-xs" title="Editar" href="@Url.Action("Editar", "Departamento", new { id = item.DepartamentoId})">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                    <a class="btn btn-info btn-xs" title="Detalles" href="@Url.Action("Detalle", "Departamento", new { id = item.DepartamentoId})">
+                        <i class="glyphicon glyphicon-th-list"></i>
+                    </a>
+                    <a class="btn btn-danger btn-xs" title="Eliminar" href="@Url.Action("Eliminar", "Departamento", new { id = item.DepartamentoId})">
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </a>                    
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+@section scripts{
+    <script>
+        $('#tablaDepartamentos').DataTable({
+            "pageLength": 5,
+            lengthMenu: [5, 10, 20, 50, 100, 200, 500],
+        });
+    </script>
+}
